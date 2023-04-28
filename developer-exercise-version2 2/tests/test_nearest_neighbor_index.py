@@ -64,3 +64,60 @@ class NearestNeighborIndexTest(unittest.TestCase):
         print(f"speedup: {(slow_time / new_time):0.2f}x")
 
     # TODO: Add more test cases to ensure your index works in different scenarios
+    def test_empty_points(self):
+        """
+        test_empty_points tests that if an empty list of points is provided,
+        find_nearest() should return None.
+        """
+
+        uut = NearestNeighborIndex([])
+
+        self.assertIsNone(uut.find_nearest((0, 0)))
+
+    def test_duplicate_points(self):
+        """
+        test_duplicate_points tests that find_nearest() returns one of the points
+        with the same minimum distance if there are multiple points with the same distance
+        to the query point.
+        """
+
+        test_points = [
+            (1, 1),
+            (2, 2),
+            (3, 3),
+            (4, 4),
+            (5, 5),
+            (6, 6),
+        ]
+
+        uut = NearestNeighborIndex(test_points)
+
+        self.assertIn(uut.find_nearest((0, 0)), test_points[:2])
+
+    def test_identical_points(self):
+        """
+        test_identical_points tests the behavior of the index when there are multiple points in the index
+        that have the same coordinates as the query point.
+        """
+
+        test_points = [
+            (1, 2),
+            (1, 0),
+            (10, 5),
+            (-1000, 20),
+            (3.14159, 42),
+            (42, 3.14159),
+            (1, 2),  # Add a point with the same coordinates as the first point
+            (3.14159, 42),  # Add a point with the same coordinates as the fifth point
+        ]
+
+        uut = NearestNeighborIndex(test_points)
+
+        # Query a point that has the same coordinates as the first point in the index
+        self.assertEqual((1, 2), uut.find_nearest((1, 2)))
+
+        # Query a point that has the same coordinates as the fifth point in the index
+        self.assertEqual((3.14159, 42), uut.find_nearest((3.14, 43)))
+
+        # Query a point that has the same coordinates as the seventh point in the index
+        self.assertEqual((1, 2), uut.find_nearest((0, 1)))
