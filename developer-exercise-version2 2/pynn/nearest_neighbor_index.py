@@ -1,7 +1,7 @@
 import math
 from collections import deque
 
-    """
+"""
     This code has improved find_nearest_fast method by using k-d tree. 
     The k-d tree is a binary tree that is used to partition a k-dimensional space into small regions.  
     
@@ -75,6 +75,7 @@ class NearestNeighborIndex:
         takes an array of 2d tuples as input points to be indexed.
         """
         self.points = points
+        self.kd_tree = KDTree(points)
 
     @staticmethod
     def find_nearest_slow(query_point, haystack):
@@ -111,9 +112,7 @@ class NearestNeighborIndex:
         
         find_nearest_fast returns the point that is closest to query_point. If there are no indexed
         points, None is returned.
-        """
-    def find_nearest_fast(self, query_point):
-        """
+        
         Returns the point in the index that is closest to the given query point.
         """
         return self.kd_tree.find_nearest_neighbor(query_point)
